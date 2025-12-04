@@ -1,0 +1,195 @@
+---
+title: "API Documentation Acceptance Criteria"
+description: "A clear, practical checklist for ensuring every API endpoint is documented consistently, accurately, and ready for production."
+tags:
+  - api
+  - api-docs
+  - documentation
+  - standards
+  - acceptance-criteria
+---
+
+# API Documentation Acceptance Criteria
+
+API documentation must be **consistent, complete, and predictable**.  
+To ensure quality across all contributors (writers, developers, PMs), each API endpoint must meet the following acceptance criteria before it’s published.
+
+This checklist helps teams ship API docs that users can rely on — without ambiguity, missing information, or inconsistent formatting.
+
+---
+
+## 1) High-level endpoint metadata
+
+Each endpoint must include:
+
+- **Endpoint name** (clear, action-based)
+- **Summary** (1 sentence describing what it does)
+- **Description** (short explanation of purpose and context)
+- **HTTP method** (GET/POST/PUT/DELETE…)
+- **Complete URL path**
+
+:::tip
+Summary = *What the endpoint does.*  
+Description = *Why it matters and when to use it.*
+:::
+
+---
+
+## 2) Request details
+
+### **2.1 Request parameters**
+All parameters must include:
+
+- name  
+- type  
+- required/optional  
+- default value (if any)  
+- description (clear, not vague)  
+- allowed values (if applicable)
+
+### **2.2 Request body**
+If the endpoint accepts a body:
+
+- full schema must be documented  
+- all fields explained  
+- example payload included  
+
+---
+
+## 3) Responses
+
+### **3.1 Success responses**
+Each endpoint must include:
+
+- **HTTP status code** (e.g., 200, 201)  
+- **Schema** of the returned object  
+- **Field-by-field explanation**  
+- **Success response example**
+
+### **3.2 Error responses**
+Every endpoint must document:
+
+- **Standardized error format**  
+- **Typical error cases** (400, 401, 404, 409, 500…)  
+- **Meaningful error messages**  
+- **Example error payloads**
+
+:::info
+If the backend uses a shared error model, it must be linked or included once in `components > schemas`.
+:::
+
+---
+
+## 4) Authentication & Authorization
+
+Every endpoint must specify:
+
+- **If authentication is required**  
+- **Which auth method is used** (Bearer token, API key, OAuth…)  
+- **Permission scopes** (if relevant)
+
+Endpoints without auth must explicitly state:  
+**“This endpoint does not require authentication.”**
+
+---
+
+## 5) Rate limits & restrictions
+
+If the API has rate limiting, the docs must include:
+
+- global rate limit  
+- per-endpoint limit  
+- rules for bursts  
+- how errors look when limits are exceeded  
+
+If there is **no rate limiting**, include:  
+**“This endpoint is not rate-limited.”**
+
+---
+
+## 6) Examples
+
+Each endpoint must include at least:
+
+- one **request example**  
+- one **successful response example**  
+- one **error response example**
+
+Formats may include:
+
+- JSON  
+- cURL  
+- fetch  
+- Python / JS snippets (optional, but recommended)
+
+:::tip
+Examples should be *realistic* and based on actual payloads used by the API — not theoretical placeholders.
+:::
+
+---
+
+## 7) Versioning & lifecycle
+
+The documentation must state:
+
+- current version (v1, v2…)  
+- if the endpoint is **deprecated**  
+- if the endpoint is **experimental**  
+- migration notes for changed or removed endpoints  
+
+---
+
+## 8) Consistency rules
+
+The following must be consistent across all endpoints:
+
+- naming conventions  
+- terminology  
+- error format  
+- capitalization (e.g., `camelCase` vs `snake_case`)  
+- field order in examples  
+- tone of voice  
+
+If something differs for a specific reason, it must be explained.
+
+---
+
+## 9) Links & references
+
+Each API doc should link to:
+
+- related endpoints  
+- authentication guide  
+- error model  
+- rate limit documentation  
+- changelog / release notes (if relevant)
+
+---
+
+## 10) Final review checklist
+
+Before publishing, verify:
+
+- [ ] Metadata and descriptions are complete  
+- [ ] Request parameters fully documented  
+- [ ] Schema is correct and matches the backend  
+- [ ] Examples are valid and tested  
+- [ ] Error responses are included  
+- [ ] Authentication info is clear  
+- [ ] No TODOs or placeholders  
+- [ ] No internal jargon  
+- [ ] Formatting follows the style guide  
+
+:::tip
+If an engineer can implement the endpoint using only your documentation, it's ready.
+:::
+
+---
+
+# Final Thoughts
+
+Acceptance criteria exist to make your API documentation predictable.  
+Predictability is what builds trust — for developers, partners, and customers.
+
+A standardized checklist ensures that every endpoint meets the same level of quality, no matter who writes it.
+

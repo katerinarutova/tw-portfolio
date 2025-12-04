@@ -1,0 +1,19 @@
+---
+title: "Boxing API v2"
+---
+
+# Boxing API v2
+
+Version 2 extends the Boxing API with:
+
+- **bouts** (individual fights on an event card)
+- **fighter stats** (aggregated records and KO stats)
+- new `/v2/...` endpoints sharing the same auth, errors and pagination as v1.
+
+These endpoints have been added:
+
+- `GET /v2/events/{event_id}/bouts`
+- `GET /v2/fighters/{fighter_id}`
+- `GET /v2/fighters/{fighter_id}/bouts`
+
+[View full v2 reference](/api) <!-- pokud používáš jednu Redoc stránku se v1+v2 -->

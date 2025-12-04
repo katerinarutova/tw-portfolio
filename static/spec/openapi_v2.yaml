@@ -1,0 +1,740 @@
+openapi: 3.1.0
+info:
+  title: Boxing Events API
+  version: 1.0.0
+  summary: Public API for boxing events, fighters, venues, and results.
+  description: |
+    This is a sample API spec created for a tech-writing portfolio. It demonstrates
+    pagination, filtering, standard errors, reusable components, and examples.
+  contact:
+    name: API Team
+    url: https://example.com/support
+servers:
+  - url: https://api.boxing.example.com/v1
+    description: Production
+  - url: https://sandbox.api.boxing.example.com/v1
+    description: Sandbox
+security:
+  - ApiKeyAuth: []
+  - OAuth2: [events:read, fighters:read]
+tags:
+  - name: Events
+    description: Browse events and cards.
+  - name: Fighters
+    description: Profiles and records.
+  - name: Venues
+    description: Event locations.
+  - name: Bouts
+    description: Individual bouts (fights) on an event card.
+paths:
+  /events:
+    get:
+      tags: [Events]
+      summary: List boxing events
+      description: |
+        Returns upcoming and past boxing events. Supports filtering and pagination.
+      operationId: listEvents
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: query
+          name: status
+          description: Filter by status
+          schema:
+            type: string
+            enum: [upcoming, past]
+          example: upcoming
+        - in: query
+          name: date_from
+          description: ISO date (inclusive)
+          schema:
+            type: string
+            format: date
+          example: '2025-10-01'
+        - in: query
+          name: date_to
+          description: ISO date (inclusive)
+          schema:
+            type: string
+            format: date
+          example: 2025-10-31
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Request-Id:
+              description: Trace id for debugging
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventList'
+              examples:
+                sample:
+                  value:
+                    data:
+                      - id: evt_1001
+                        name: Poděbrady Boxing Cup
+                        date: '2025-10-11'
+                        status: upcoming
+                        venue_id: ven_300
+                        city: Poděbrady
+                        country: CZ
+                      - id: evt_1000
+                        name: City Gala
+                        date: '2025-08-15'
+                        status: past
+                        venue_id: ven_210
+                        city: Prague
+                        country: CZ
+                    pagination:
+                      page: 1
+                      limit: 25
+                      total: 132
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      x-codeSamples:
+        - lang: cURL
+          label: curl
+          source: |
+            curl -s -H "X-API-Key: sk_test_123" \
+              "https://api.boxing.example.com/v1/events?status=upcoming&date_from=2025-10-01&limit=3"
+        - lang: JavaScript
+          label: fetch
+          source: |
+            const res = await fetch("https://api.boxing.example.com/v1/events?status=upcoming&limit=3", {
+              headers: { "X-API-Key": "sk_test_123" }
+            });
+            const data = await res.json();
+            console.log(data);
+    post:
+      tags: [Events]
+      summary: Create a boxing event
+      description: Creates a new boxing event.
+      operationId: createEvent
+      security:
+        - OAuth2: [events:write]     # ← vyžaduje write scope
+      parameters:
+        - $ref: '#/components/parameters/idempotency_key'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventCreate'
+            examples:
+              minimal:
+                summary: Minimal required fields
+                value:
+                  name: Poděbrady Boxing Cup
+                  date: '2025-10-11'
+                  status: upcoming
+                  city: Poděbrady
+                  country: CZ
+              with_venue:
+                summary: With venue reference
+                value:
+                  name: City Gala
+                  date: '2025-11-05'
+                  status: upcoming
+                  venue_id: ven_210
+                  city: Prague
+                  country: CZ
+      responses:
+        '201':
+          description: Created
+          headers:
+            Location:
+              description: Absolute URL of the newly created event resource
+              schema:
+                type: string
+                format: uri
+            X-Request-Id:
+              description: Trace id for debugging
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+              examples:
+                created:
+                  value:
+                    id: evt_1010
+                    name: Poděbrady Boxing Cup
+                    date: '2025-10-11'
+                    status: upcoming
+                    venue_id: ven_300
+                    city: Poděbrady
+                    country: CZ
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: Conflict (duplicate or overlapping event)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                duplicate:
+                  value:
+                    error:
+                      code: conflict
+                      message: "An event with the same name and date already exists."
+                      request_id: "req_conflict001"
+        '422':
+          description: Unprocessable Entity (validation failed)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                invalid_status:
+                  value:
+                    error:
+                      code: validation_error
+                      message: "Status must be one of: upcoming, past."
+                      request_id: "req_val001"
+      x-codeSamples:
+        - lang: cURL
+          label: curl
+          source: |
+            curl -i -X POST "https://api.boxing.example.com/v1/events" \
+              -H "Content-Type: application/json" \
+              -H "Authorization: Bearer <ACCESS_TOKEN_WITH_events:write>" \
+              -H "Idempotency-Key: 52fe0a6c-9c6e-44e5-8b30-22d9f4a4a111" \
+              --data '{
+                "name":"Poděbrady Boxing Cup",
+                "date":"2025-10-11",
+                "status":"upcoming",
+                "city":"Poděbrady",
+                "country":"CZ",
+                "venue_id":"ven_300"
+              }'
+        - lang: JavaScript
+          label: fetch
+          source: |
+            const res = await fetch("https://api.boxing.example.com/v1/events", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer <ACCESS_TOKEN_WITH_events:write>",
+                "Idempotency-Key": crypto.randomUUID()
+              },
+              body: JSON.stringify({
+                name: "Poděbrady Boxing Cup",
+                date: "2025-10-11",
+                status: "upcoming",
+                city: "Poděbrady",
+                country: "CZ",
+                venue_id: "ven_300"
+              })
+            });
+            console.log(res.status, await res.json());
+
+  /events/{event_id}:
+    get:
+      tags: [Events]
+      summary: Get a boxing event
+      description: Returns a specific boxing event.
+      operationId: getEvent
+      parameters:
+        - $ref: '#/components/parameters/event_id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /fighters:
+    get:
+      tags: [Fighters]
+      summary: List fighters
+      description: Returns a list of all fighters.
+      operationId: listFighters
+      parameters:
+        - in: query
+          name: q
+          description: Search by name
+          schema:
+            type: string
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FighterList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /fighters/{fighter_id}:
+    get:
+      tags: [Fighters]
+      summary: Get fighter
+      description: Returns information about a specific fighter.
+      operationId: getFighter
+      parameters:
+        - $ref: '#/components/parameters/fighter_id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fighter'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /venues/{venue_id}:
+    get:
+      tags: [Venues]
+      summary: Get venue details.
+      description: Returns details for a specific venue.
+      operationId: getVenue
+      parameters:
+        - $ref: '#/components/parameters/venue_id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Venue'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/events/{event_id}/bouts:
+    get:
+      tags:
+        - Bouts
+      summary: List bouts for an event (v2)
+      description: Returns all bouts (fights) on the event card, including basic result and matchup info.
+      parameters:
+        - $ref: '#/components/parameters/event_id'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: List of bouts for the event.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoutList'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /v2/fighters/{fighter_id}:
+    get:
+      tags:
+        - Fighters
+      summary: Get fighter with stats (v2)
+      description: Returns fighter profile extended with record and basic stats.
+      parameters:
+        - $ref: '#/components/parameters/fighter_id'
+      responses:
+        '200':
+          description: Fighter with aggregated stats.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FighterWithStats'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /v2/fighters/{fighter_id}/bouts:
+    get:
+      tags:
+        - Bouts
+      summary: List bouts for a fighter (v2)
+      description: Returns the fighter’s bouts, including opponent, event and result.
+      parameters:
+        - $ref: '#/components/parameters/fighter_id'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: List of bouts for the fighter.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoutList'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Provide your API key in the `X-API-Key` header.
+    OAuth2:
+      type: oauth2
+      description: Client Credentials flow.
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.boxing.example.com/oauth/token
+          scopes:
+            events:read: Read events
+            fighters:read: Read fighters
+            events:write: Create and modify events
+
+  parameters:
+    idempotency_key:
+      name: Idempotency-Key
+      in: header
+      required: false
+      description: |
+        Optional idempotency key to safely retry create requests without
+        creating duplicates. Provide a unique value per logical operation.
+      schema:
+        type: string
+    page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 25
+    event_id:
+      name: event_id
+      in: path
+      required: true
+      schema:
+        type: string
+    fighter_id:
+      name: fighter_id
+      in: path
+      required: true
+      schema:
+        type: string
+    venue_id:
+      name: venue_id
+      in: path
+      required: true
+      schema:
+        type: string
+
+  responses:
+    BadRequest:
+      description: Your request is invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            invalid_date_range:
+              value:
+                error:
+                  code: invalid_date_range
+                  message: "Date_from must be <= date_to."
+                  request_id: req_abc123
+    Unauthorized:
+      description: Missing or invalid credentials.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            missing_api_key:
+              summary: No API key provided
+              value:
+                error:
+                  code: unauthorized
+                  message: "Missing API key. Provide a valid key in the 'X-API-Key' header."
+                  request_id: "req_unauth001"
+            invalid_token:
+              summary: Invalid or expired token
+              value:
+                error:
+                  code: invalid_token
+                  message: "The provided OAuth2 token is invalid or has expired. Please reauthenticate."
+                  request_id: "req_unauth002"
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            event_missing:
+              value:
+                error:
+                  code: not_found
+                  message: "Event 'evt_9999' was not found."
+                  request_id: "req_xyz987"
+
+  schemas:
+    EventList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    EventCreate:
+      type: object
+      required: [name, date, status, city, country]
+      properties:
+        name:
+          type: string
+          example: Poděbrady Boxing Cup
+        date:
+          type: string
+          format: date
+          example: '2025-10-11'
+        status:
+          type: string
+          enum: [upcoming, past]
+          example: upcoming
+        venue_id:
+          type: string
+          example: ven_300
+        city:
+          type: string
+          example: Poděbrady
+        country:
+          type: string
+          example: CZ      
+
+    FighterList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Fighter'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+
+    Event:
+      type: object
+      required: [id, name, date, status]
+      properties:
+        id:
+          type: string
+          example: evt_1001
+        name:
+          type: string
+          example: Poděbrady Boxing Cup
+        date:
+          type: string
+          format: date
+          example: '2025-10-11'
+        status:
+          type: string
+          enum: [upcoming, past]
+        venue_id:
+          type: string
+          example: ven_300
+        city:
+          type: string
+          example: Poděbrady
+        country:
+          type: string
+          example: CZ
+
+    Fighter:
+      type: object
+      required: [id, full_name]
+      properties:
+        id:
+          type: string
+          example: ftr_77
+        full_name:
+          type: string
+          example: Daniela Vencl
+        stance:
+          type: string
+          enum: [orthodox, southpaw]
+          example: orthodox
+        record:
+          type: object
+          properties:
+            wins:
+              type: integer
+              example: 12
+            losses:
+              type: integer
+              example: 3
+            draws:
+              type: integer
+              example: 1
+
+    Venue:
+      type: object
+      properties:
+        id:
+          type: string
+          example: ven_300
+        name:
+          type: string
+          example: Sport Hall Poděbrady
+        address:
+          type: string
+          example: Jiřího náměstí 1, Poděbrady
+        capacity:
+          type: integer
+          example: 3500
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              example: invalid_date_range
+            message:
+              type: string
+              example: 'date_from must be <= date_to.'
+            request_id:
+              type: string
+              example: req_abc123
+
+    Bout:
+      type: object
+      required:
+        - id
+        - event_id
+        - order
+        - weight_class
+        - scheduled_rounds
+        - red_fighter_id
+        - blue_fighter_id
+      properties:
+        id:
+          type: string
+          example: bout_1001
+        event_id:
+          type: string
+          example: evt_1001
+        order:
+          type: integer
+          description: Position of the bout on the event card (1 = opener, last = main event).
+          example: 3
+        weight_class:
+          type: string
+          example: "Lightweight"
+        title_fight:
+          type: boolean
+          description: True if the bout is for a title belt.
+          example: false
+        scheduled_rounds:
+          type: integer
+          example: 6
+        red_fighter_id:
+          type: string
+          example: ftr_2001
+        blue_fighter_id:
+          type: string
+          example: ftr_2002
+        result:
+          type: object
+          nullable: true
+          description: Present only after the bout has been completed.
+          properties:
+            winner_fighter_id:
+              type: string
+              nullable: true
+              example: ftr_2001
+            method:
+              type: string
+              description: Short result code (UD, SD, KO, TKO, RTD, DRAW, NC, …).
+              example: "UD"
+            rounds_completed:
+              type: integer
+              example: 6
+            notes:
+              type: string
+              example: "Scores: 59–55, 58–56, 59–55."
+        event:
+          $ref: '#/components/schemas/Event'
+
+    BoutList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bout'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    FighterStats:
+      type: object
+      description: Aggregated record and basic statistics for a fighter.
+      properties:
+        total_bouts:
+          type: integer
+          example: 18
+        wins:
+          type: integer
+          example: 14
+        losses:
+          type: integer
+          example: 3
+        draws:
+          type: integer
+          example: 1
+        kos:
+          type: integer
+          description: Number of wins by KO/TKO.
+          example: 9
+        last_5:
+          type: array
+          description: Results of the last 5 bouts (W = win, L = loss, D = draw).
+          items:
+            type: string
+            enum: [W, L, D]
+          example: ["W", "W", "L", "W", "D"]
+
+    FighterWithStats:
+      allOf:
+        - $ref: '#/components/schemas/Fighter'
+        - type: object
+          properties:
+            stats:
+              $ref: '#/components/schemas/FighterStats'

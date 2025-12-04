@@ -1,0 +1,322 @@
+:root {
+  --ifm-font-family-base: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --ifm-container-width: 960px;
+  --ifm-color-primary: #0f172a;
+  --ifm-heading-color: #0f172a;
+}
+.markdown h1 { font-size: 2rem; margin-top: 1.2rem; }
+.markdown p { line-height: 1.7; }
+
+/* 🔧 Dark mode overhaul */
+html[data-theme='dark'] {
+  /* Základní paleta – tlumená, ne šedá tma */
+  --ifm-background-color: #0b1020;        /* hlavní pozadí */
+  --ifm-background-surface-color: #12182a; /* karty/sekce */
+  --ifm-font-color-base: #e6e9f3;         /* hlavní text */
+  --ifm-color-primary: #8ab4ff;           /* odkazy/akce (světle modrá) */
+  --ifm-color-primary-dark: #76a3f7;
+  --ifm-color-primary-darker: #6998f0;
+  --ifm-color-primary-light: #a2c4ff;
+
+  /* Hrany a jemné linie */
+  --ifm-color-emphasis-200: #2a3552;  /* okraje karet, tabulek, code inline bg */
+  --ifm-color-emphasis-300: #3a486e;  /* hrany, hover */
+  --ifm-toc-border-color: var(--ifm-color-emphasis-200);
+
+  /* Navbar & footer */
+  --ifm-navbar-background-color: #0e1426;
+  --ifm-footer-background-color: #0e1426;
+
+  /* Odkazy a hover stavy */
+  --ifm-link-color: var(--ifm-color-primary);
+  --ifm-link-hover-color: #b8d1ff;
+
+  /* Kód a zvýraznění */
+  --prism-background-color: #0f1428;   /* pozadí bloků kódu */
+  --prism-color: #e6e9f3;
+
+  /* Buttons/labels */
+  --ifm-button-background-color: #1a2340;
+  --ifm-button-border-color: #2a3552;
+}
+
+/* karty a povrchy konzistentní */
+html[data-theme='dark'] .card {
+  background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 14px;
+}
+
+/* Sidebar lepší kontrast položek */
+html[data-theme='dark'] .menu__link {
+  color: var(--ifm-font-color-base);
+}
+html[data-theme='dark'] .menu__link:hover {
+  background: rgba(138,180,255,0.08);
+}
+
+/* Hero sekce */
+html[data-theme='dark'] .hero--primary {
+  background: linear-gradient(180deg,#0b1020 0%, #12182a 100%);
+  color: var(--ifm-font-color-base);
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+/* Tabulky */
+html[data-theme='dark'] table {
+  border-color: var(--ifm-color-emphasis-200);
+}
+html[data-theme='dark'] th, 
+html[data-theme='dark'] td {
+  border-color: var(--ifm-color-emphasis-200);
+  background: transparent;
+}
+
+/* Inline code (backticks) – čitelnější kapsle */
+html[data-theme='dark'] {
+  --ifm-background-color: #0b1020;
+  --ifm-background-surface-color: #12182a;
+  --ifm-font-color-base: #e6e9f3;
+  --ifm-color-primary: #8ab4ff;
+  --ifm-color-primary-dark: #76a3f7;
+  --ifm-color-primary-darker: #6998f0;
+  --ifm-color-primary-light: #a2c4ff;
+  --ifm-color-emphasis-200: #2a3552;
+  --ifm-color-emphasis-300: #3a486e;
+  --ifm-toc-border-color: var(--ifm-color-emphasis-200);
+  --ifm-navbar-background-color: #0e1426;
+  --ifm-footer-background-color: #0e1426;
+  --ifm-link-color: var(--ifm-color-primary);
+  --ifm-link-hover-color: #b8d1ff;
+  --prism-background-color: #0f1428;
+  --prism-color: #e6e9f3;
+  --ifm-button-background-color: #1a2340;
+  --ifm-button-border-color: #2a3552;
+}
+
+/* kódové bloky */
+html[data-theme='dark'] code {
+  background: rgba(138,180,255,0.08);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  padding: .15rem .35rem;
+  border-radius: 6px;
+}
+
+/* nadpisy = bílé */
+html[data-theme='dark'] h1,
+html[data-theme='dark'] h2,
+html[data-theme='dark'] h3,
+html[data-theme='dark'] h4,
+html[data-theme='dark'] h5,
+html[data-theme='dark'] h6 {
+  color: #ffffff !important;
+}
+
+/* text a seznamy = měkčí kontrast */
+html[data-theme='dark'] p,
+html[data-theme='dark'] li,
+html[data-theme='dark'] span {
+  color: #e8ebf5;
+}
+
+/* odkazy – hladký hover */
+html[data-theme='dark'] a { transition: color .2s ease-in-out; }
+html[data-theme='dark'] a:hover { color: var(--ifm-link-hover-color); }
+
+/* zvýraznění headů při hoveru – jemné */
+html[data-theme='dark'] h2:hover,
+html[data-theme='dark'] h3:hover {
+  text-shadow: 0 0 10px rgba(138,180,255,0.35);
+}
+
+
+/* Admonitions (Poznámky) – decentní */
+html[data-theme='dark'] .admonition {
+  background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+}
+
+/* Obrázky – když jsou moc světlé */
+html[data-theme='dark'] .markdown img {
+  filter: none; /* případně try: brightness(.97) contrast(1.02) */
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 10px;
+}
+
+/* ===== Light mode (brand baseline) ===== */
+:root {
+  /* Typo & layout */
+  --ifm-font-family-base: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --ifm-line-height-base: 1.7;
+  --ifm-container-width: 960px;
+
+  /* Brand barvy (světlejší modrá jako akcent) */
+  --ifm-color-primary: #1f4aa8;           /* hlavní akcent – sytější, ale ne křiklavý */
+  --ifm-color-primary-dark: #1b4296;
+  --ifm-color-primary-darker: #173a85;
+  --ifm-color-primary-light: #3a61b5;
+  --ifm-color-primary-lighter: #5578c2;
+
+  /* Povrchy a text */
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #f6f8fb; /* karty/sekce */
+  --ifm-font-color-base: #0f172a;          /* tmavě modro-šedý text */
+  --ifm-heading-color: #0b1224;           /* tituly o chlup tmavší pro kontrast */
+
+  /* Jemné hrany a linky */
+  --ifm-color-emphasis-100: #eef2f7;
+  --ifm-color-emphasis-200: #e3e8f3;
+  --ifm-color-emphasis-300: #cfd7e6;
+
+  /* Code blocks */
+  --prism-background-color: #f3f6fb;
+  --prism-color: #0f172a;
+
+  /* Navbar & Footer */
+  --ifm-navbar-background-color: #ffffff;
+  --ifm-footer-background-color: #0f1426;  /* tmavší footer pro pevnou základnu */
+  --ifm-footer-link-color: #c7d2fe;
+}
+
+/* Tituly, odstavce – decentně kompaktnější rytmus */
+.markdown h1 { color: var(--ifm-heading-color); letter-spacing: -0.01em; margin-top: 0.8rem; margin-bottom: 0.6rem; }
+.markdown h2, .markdown h3 { color: var(--ifm-heading-color); letter-spacing: -0.005em; }
+.markdown p { color: var(--ifm-font-color-base); }
+
+/* Karty/boxy */
+.card {
+  background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 14px;
+}
+
+/* Inline code – kapsle */
+code {
+  background: #edf2ff;
+  border: 1px solid #dbe4ff;
+  padding: .15rem .35rem;
+  border-radius: 6px;
+}
+
+/* Tabulky – jemné hrany */
+table { border-color: var(--ifm-color-emphasis-200); }
+th, td { border-color: var(--ifm-color-emphasis-200); background: transparent; }
+
+/* Odkazy – plynulé hover stavy */
+a { transition: color .2s ease-in-out; }
+a:hover { color: var(--ifm-color-primary-light); }
+
+/* Hero – čistý světlý blok s jemnou linií dole */
+.hero--primary {
+  background: linear-gradient(180deg, #ffffff 0%, #f7f9ff 100%);
+  color: var(--ifm-heading-color);
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+/* Footer – světlé linky na tmavém pozadí */
+.footer a { color: var(--ifm-footer-link-color); }
+.footer a:hover { color: #e0e7ff; }
+
+/* 🧲 Fixní (připíchnutý) Redoc sidebar v Redocusauru */
+:root {
+  --api-sidebar-width: 300px; /* můžeš doladit podle svého layoutu */
+}
+
+/* Sidebar – udělej z něj fixed panel pod navbar */
+.redoc-wrap .menu-content {
+  position: fixed !important;
+  top: var(--ifm-navbar-height, 60px); /* respektuj výšku Docusaurus navbaru */
+  left: 0;
+  bottom: 0;
+  width: var(--api-sidebar-width);
+  overflow: auto;              /* aby šly projíždět dlouhé seznamy endpointů */
+  background: var(--ifm-background-surface-color);
+  border-right: 1px solid var(--ifm-color-emphasis-200);
+  z-index: 0;                  /* nech navbar nad tím */
+}
+
+/* Hlavní panel posuň doprava, aby ho sidebar nepřekrýval */
+.redoc-wrap .api-content {
+  margin-left: var(--api-sidebar-width);
+}
+
+/* V dark módu zachovej vizuál */
+html[data-theme='dark'] .redoc-wrap .menu-content {
+  background: var(--ifm-background-surface-color);
+  border-right: 1px solid var(--ifm-color-emphasis-200);
+}
+
+/* 📱 Na mobilech nech výchozí chování (stack) */
+@media (max-width: 996px) {
+  .redoc-wrap .menu-content {
+    position: static !important;
+    width: auto;
+    top: auto;
+    left: auto;
+    bottom: auto;
+    border-right: none;
+  }
+  .redoc-wrap .api-content {
+    margin-left: 0;
+  }
+}
+
+:root {
+  --topbar-offset: calc(var(--ifm-navbar-height, 60px) + var(--docusaurus-announcement-bar-height, 0px));
+  --api-sidebar-width: 300px;
+}
+
+.redoc-wrap .menu-content {
+  top: var(--topbar-offset) !important; /* odstraníš těch +6px */
+  padding-top: 0; /* můžeš i snížit padding */
+}
+
+.redoc-wrap .api-content .content {
+  scroll-margin-top: calc(var(--topbar-offset) + 6px);
+}
+
+.redoc-wrap h1,
+.redoc-wrap h2,
+.redoc-wrap h3,
+.redoc-wrap h4 {
+  scroll-margin-top: calc(var(--topbar-offset) + 6px);
+}
+
+/* 🔕 Schovej Redoc search v sidebaru + zruš jeho mezery */
+.redoc-wrap .menu-content .search,
+.redoc-wrap .menu-content .search-bar,
+.redoc-wrap .menu-content [role="search"],
+.redoc-wrap .menu-content [class*="search"] {
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 0 !important;
+  border: 0 !important;
+}
+
+/* 🧹 Odstraň mezeru nad první položkou v Redocusaurus sidebaru */
+.redoc-wrap .menu-content {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* schovej úplně všechny možné search kontejnery, co Redoc vkládá */
+.redoc-wrap .menu-content > div:first-child,
+.redoc-wrap .menu-content .search,
+.redoc-wrap .menu-content .search-bar,
+.redoc-wrap .menu-content [class*="search"],
+.redoc-wrap .menu-content [role="search"] {
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 0 !important;
+  border: 0 !important;
+}
+
+/* vyrovnej sidebar hned pod navbar */
+:root {
+  --topbar-offset: calc(var(--ifm-navbar-height, 60px));
+}
+.redoc-wrap .menu-content {
+  top: var(--topbar-offset) !important;
+}
