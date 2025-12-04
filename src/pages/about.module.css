@@ -1,0 +1,24 @@
+.ctaButton {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.8rem 1.4rem;
+  font-size: 1.05rem;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #1f4aa8, #3a61b5);
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.ctaButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  text-decoration: none;
+}
+
+.ctaButton:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}

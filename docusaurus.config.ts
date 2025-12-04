@@ -104,7 +104,7 @@ const config = {
             {label: 'LinkedIn', href: 'https://linkedin.com/in/katerinarutova'},
             {label: 'Instagram', href: 'https://instagram.com/katerinarutovaphoto'},
             {label: 'GitHub', href: 'https://github.com/katerinarutova'},
-            {label: 'Email', href: 'mailto:katerina.rutova@gmail.com'},
+            {label: 'Email', href: 'mailto:rutovadocs@gmail.com'},
           ],
         },
       ],
