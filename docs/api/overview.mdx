@@ -1,16 +1,218 @@
 ---
 title: "Boxing API – Overview"
+description: "How to work with the API: basic concepts, authentication, request and response format, and error model."
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-# Boxing API – Overview
+# API Overview
 
-This section contains the public reference for the Boxing API.
+This page gives you a practical overview of how to work with the API: what it does, how to authenticate, how requests and responses are structured, and how errors are returned.
 
-- **v1** – core resources (events, fighters, venues)  
-- **v2** – extended domain (bouts, fighter stats)
-
-Use the navigation on the left to explore each version.
+For a full list of endpoints and schemas, see [Boxing API v1](/api) and [Boxing API v2](/api-v2).
 
 :::info
 The API reference is actively being refined. Expect updates to descriptions, examples, and schema details as the specification matures.
 :::
+
+---
+
+## Introduction
+
+The API lets you build integrations around the core boxing domain:
+
+- **Events** – fight nights, sparring sessions, training events  
+- **Fighters** – people participating in events  
+- **Venues** – where events take place  
+- (Optional) **Bouts** – detailed fight-level data
+
+Use the navigation on the left to explore each version.
+
+Typical use cases:
+
+- Syncing event and fighter data into internal tools or CRMs  
+- Building dashboards with upcoming events and fighter stats  
+- Automating workflows that currently rely on manual data entry
+
+### Base URL
+
+```text
+https://api.boxing.example.com
+```
+
+All endpoints described in this documentation are relative to this base URL.
+
+## Versions
+
+The API is versioned in the URL:
+- **v1** – core resources (events, fighters, venues)
+- **v2** – extended domain (bouts)
+
+### Examples
+
+```text
+GET /v1/events
+GET /v1/fighters/{fighterId}
+GET /v2/bouts?eventId=ev_123
+```
+
+## How to Authenticate
+
+All requests must be authenticated using a **Bearer token**. Requests without a valid token return **401 Unauthorized**.
+
+### Sending the Token
+
+Send the token in the Authorization header:
+
+Authorization: Bearer YOUR_TOKEN_HERE
+
+
+### Examples
+
+**cURL**
+
+```bash
+curl -X GET "https://api.boxing.example.com/v1/events" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+**JavaScript**
+
+```JavaScript
+const res = await fetch('https://api.boxing.example.com/v1/events', {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
+const data = await res.json();
+```
+
+**Python**
+
+```python
+import requests
+
+resp = requests.get(
+    "https://api.boxing.example.com/v1/events",
+    headers={"Authorization": f"Bearer {TOKEN}"}
+)
+data = resp.json()
+```
+
+### Token Scope
+
+Tokens might be limited by:
+
+- environment (sandbox vs production)
+- read-only vs read-write
+- allowed resource types
+
+If you receive **403 Forbidden**, check:
+- environment
+- permissions
+- token expiration
+
+## Requests and Responses
+
+All API endpoints use JSON for both requests and responses.
+
+Requests with a body must include:
+
+```text
+Content-Type: application/json
+```
+
+### HTTP Methods
+
+- GET – read data
+- POST – create resource or trigger an action
+- PUT – full update
+- PATCH – partial update
+- DELETE – delete or deactivate a resource
+
+### Examples
+
+#### Create an Event
+
+```bash
+POST /v1/events
+Content-Type: application/json
+Authorization: Bearer YOUR_TOKEN_HERE
+
+{
+  "name": "Friday Fight Night",
+  "startsAt": "2025-01-10T19:00:00Z",
+  "venueId": "ven_001",
+  "status": "scheduled"
+}
+```
+
+#### Single Resource Responses
+
+```json
+{
+  "data": {
+    "id": "ev_123",
+    "name": "Friday Fight Night",
+    "startsAt": "2025-01-10T19:00:00Z",
+    "venueId": "ven_001",
+    "status": "scheduled",
+    "createdAt": "2024-12-01T10:15:00Z",
+    "updatedAt": "2024-12-01T10:15:00Z"
+  }
+}
+```
+
+## Errors
+
+When a request fails, the API returns:
+
+- 4xx status codes for client-side issues
+- 5xx status codes for server-side issues
+- A JSON error body with details
+
+### Error Format
+
+```json
+{
+  "error": {
+    "code": "auth/missing_token",
+    "message": "Authorization header is required.",
+    "requestId": "req_9d3e1c6f",
+    "details": null
+  }
+}
+```
+
+### Field Description
+
+- code – concise identifier for programmatic handling
+- message – readable explanation
+- requestId – reference when contacting support
+- details – optional extra context
+
+### Common Error Codes
+
+| HTTP | Code                   | Meaning                                          |
+|------|------------------------|--------------------------------------------------|
+| 400  | request/invalid        | The request is malformed or contains invalid data. |
+| 401  | auth/missing_token     | The `Authorization` header is missing.          |
+| 401  | auth/invalid_token     | The token is expired, revoked, or not recognized. |
+| 403  | auth/forbidden         | The token is valid but lacks required permissions. |
+| 404  | resource/not_found     | The requested resource does not exist.          |
+| 409  | resource/conflict      | The request conflicts with the current resource state. |
+| 429  | rate/limited           | Too many requests. Slow down and retry later.   |
+| 500  | server/error           | Internal error. The request could not be processed. |
+
+### Handling Errors
+
+Best practices:
+
+- Log code, message, and requestId
+- Do not retry 4xx errors without fixing the request
+- Use exponential backoff for 429 and 5xx retries
+
+## Next Steps
+
+- Browse [Boxing API v1](/api) and [Boxing API v2](/api-v2) for endpoint details.
+- Use the examples on this page as a template for your own integration.
