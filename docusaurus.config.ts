@@ -93,13 +93,6 @@ const config = {
       style: 'dark',
       links: [
         {
-          title: 'Work',
-          items: [
-            {label: 'Projects', to: '/docs/projects/overview'},
-          ],
-        },
-        {
-          title: 'Find me',
           items: [
             {label: 'LinkedIn', href: 'https://linkedin.com/in/katerinarutova'},
             {label: 'Instagram', href: 'https://instagram.com/katerinarutovaphoto'},
@@ -108,7 +101,7 @@ const config = {
           ],
         },
       ],
-      copyright: `© ${new Date().getFullYear()} Katerina Rutova`,
+      copyright: `© ${new Date().getFullYear()} Katerina Rutova. Built with <a href="https://docusaurus.io" target="_blank">Docusaurus</a>.`,
     },
     prism: {
       theme: prismThemes.github,
