@@ -3,7 +3,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 const config = {
   title: 'RutovaDocs',
   tagline: 'API docs • Upgrade guides • Release notes',
-  url: 'https://your-domain.example', // až budeš nasazovat
+  url: 'https://tw-portfolio-rutova.vercel.app', // až budeš nasazovat
   baseUrl: '/',
   favicon: 'img/favicon.ico',
   trailingSlash: false,
@@ -117,9 +117,14 @@ const config = {
     image: 'img/og-cover.jpg',
     metadata: [
       {
+        name: 'description',
+        content:
+          'Portfolio of Katerina Rutova — API technical writer specializing in API documentation, information architecture, release notes, and modern doc tooling.',
+      },
+      {
         name: 'keywords',
         content:
-          'technical writing, api documentation, release notes, upgrade guide',
+          'technical writer, technical writing, api documentation, release notes, information architecture, documentation engineer, tech writing portfolio',
       },
     ],
   },
