@@ -2,18 +2,20 @@ openapi: 3.1.0
 info:
   title: Boxing Events API
   version: 1.0.0
+  license:
+    name: Proprietary
+    identifier: Proprietary
   summary: Public API for boxing events, fighters, venues, and results.
   description: |
     This is a sample API spec created for a tech-writing portfolio. It demonstrates
     pagination, filtering, standard errors, reusable components, and examples.
+    The endpoints are not meant to be used as a production or fully functional API.
   contact:
     name: API Team
-    url: https://example.com/support
+    url: https://tw-portfolio-rutova.vercel.app/contact
 servers:
-  - url: https://api.boxing.example.com/v1
-    description: Production
-  - url: https://sandbox.api.boxing.example.com/v1
-    description: Sandbox
+  - url: https://tw-portfolio-rutova.vercel.app/api
+    description: Documentation example (read-only)
 security:
   - ApiKeyAuth: []
   - OAuth2: [events:read, fighters:read]

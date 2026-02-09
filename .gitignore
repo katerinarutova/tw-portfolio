@@ -18,3 +18,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Lint reports / local artifacts
+static/spec/lint-report.json

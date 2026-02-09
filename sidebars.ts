@@ -29,7 +29,6 @@ const sidebars: SidebarsConfig = {
       items: [
         {type: 'doc', id: 'api/overview'},
         {type: 'doc', id: 'api/v1'},
-        {type: 'doc', id: 'api/v2'},
       ],
     },
   ],

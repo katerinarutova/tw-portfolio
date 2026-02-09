@@ -9,10 +9,17 @@ import TabItem from '@theme/TabItem';
 
 This page gives you a practical overview of how to work with the API: what it does, how to authenticate, how requests and responses are structured, and how errors are returned.
 
-For a full list of endpoints and schemas, see [Boxing API v1](/api) and [Boxing API v2](/api-v2).
+For a full list of endpoints and schemas, see [Boxing API v1](/api).
 
 :::info
+This API is provided as a documentation sample only.
+
+It is intended to demonstrate API structure, OpenAPI specification, and documentation practices.  
+The endpoints are not meant to be used as a production or fully functional API.
+
 The API reference is actively being refined. Expect updates to descriptions, examples, and schema details as the specification matures.
+
+Used tooling: Docusaurus, OpenAPI 3.1, Redocly
 :::
 
 ---
@@ -42,18 +49,11 @@ https://api.boxing.example.com
 
 All endpoints described in this documentation are relative to this base URL.
 
-## Versions
-
-The API is versioned in the URL:
-- **v1** – core resources (events, fighters, venues)
-- **v2** – extended domain (bouts)
-
 ### Examples
 
 ```text
 GET /v1/events
 GET /v1/fighters/{fighterId}
-GET /v2/bouts?eventId=ev_123
 ```
 
 ## How to Authenticate
@@ -214,5 +214,5 @@ Best practices:
 
 ## Next Steps
 
-- Browse [Boxing API v1](/api) and [Boxing API v2](/api-v2) for endpoint details.
+- Browse [Boxing API v1](/api) for endpoint details.
 - Use the examples on this page as a template for your own integration.

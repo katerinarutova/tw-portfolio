@@ -35,11 +35,6 @@ const config = {
             spec: './static/spec/openapi.yaml',      // ve static/spec/
             route: '/api',                  // v1 reference
           },
-          {
-            id: 'boxing-api-v2',
-            spec: './static/spec/openapi_v2.yaml',   // ve static/spec/
-            route: '/api-v2',               // v2 reference
-          },
         ],
         theme: {
           primaryColor: '#1f4aa8',
@@ -70,10 +65,6 @@ const config = {
             {
               label: 'Boxing API v1',
               to: '/api',
-            },
-            {
-              label: 'Boxing API v2',
-              to: '/api-v2',
             },
           ],
         },
