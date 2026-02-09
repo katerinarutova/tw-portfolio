@@ -21,3 +21,4 @@ yarn-error.log*
 
 # Lint reports / local artifacts
 static/spec/lint-report.json
+_drafts/lint-v2.json
