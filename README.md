@@ -1,41 +1,78 @@
-# Website
+# Technical Writing Portfolio
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+This repository contains my technical writing portfolio, focused on API documentation, OpenAPI specifications, and documentation tooling.
 
-## Installation
+The project demonstrates how I approach API documentation as a product: with structure, validation, consistency, and clear communication for both developers and stakeholders.
 
-```bash
-yarn
-```
+---
 
-## Local Development
+## What this project includes
 
-```bash
-yarn start
-```
+- **API documentation sample**
+  - OpenAPI 3.1 specification
+  - Validated and linted using Redocly
+  - Published using Docusaurus and Redoc
+- **Documentation playbooks**
+  - API documentation acceptance criteria
+  - Writing and quality guidelines
+- **MDX-based documentation**
+  - Structured content
+  - Reusable patterns
+  - Clear separation between drafts and published docs
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+---
 
-## Build
+## API documentation sample
 
-```bash
-yarn build
-```
+The published API documentation is provided **as a documentation sample only**.
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
+It demonstrates:
+- API structure and resource modeling
+- OpenAPI 3.1 features
+- Documentation layout and navigation
+- Consistent responses and naming conventions
 
-## Deployment
+The endpoints are **not intended for production use**.
 
-Using SSH:
+Live documentation:
+👉 https://tw-portfolio-rutova.vercel.app/api
 
-```bash
-USE_SSH=true yarn deploy
-```
+---
 
-Not using SSH:
+## Tooling & stack
 
-```bash
-GIT_USER=<Your GitHub username> yarn deploy
-```
+- **OpenAPI 3.1**
+- **Redocly CLI** (validation and linting)
+- **Docusaurus**
+- **MDX**
+- **GitHub + Vercel** (CI/CD and hosting)
 
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+---
+
+## Quality approach
+
+This project follows a simple quality gate:
+
+- OpenAPI specs must be valid (no errors)
+- Lint warnings are reviewed and resolved
+- Documentation changes are reviewed locally before publishing
+- Draft content is kept separate from published content
+
+---
+
+## Project status
+
+This is an actively maintained portfolio project.
+Some content (e.g. API v2 drafts) may exist in draft form and is intentionally not published until it meets quality standards.
+
+---
+
+## About me
+
+I am a technical writer with a strong focus on:
+- API documentation
+- Developer experience
+- Documentation quality and consistency
+
+This repository is part of my professional portfolio.
+
