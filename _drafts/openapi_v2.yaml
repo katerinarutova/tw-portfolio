@@ -1,19 +1,21 @@
 openapi: 3.1.0
 info:
   title: Boxing Events API
-  version: 1.0.0
+  version: 1.0.1
+  license:
+    name: Proprietary
+    identifier: Proprietary
   summary: Public API for boxing events, fighters, venues, and results.
   description: |
     This is a sample API spec created for a tech-writing portfolio. It demonstrates
     pagination, filtering, standard errors, reusable components, and examples.
+    The endpoints are not meant to be used as a production or fully functional API.
   contact:
     name: API Team
-    url: https://example.com/support
+    url: https://tw-portfolio-rutova.vercel.app/contact
 servers:
-  - url: https://api.boxing.example.com/v1
-    description: Production
-  - url: https://sandbox.api.boxing.example.com/v1
-    description: Sandbox
+  - url: https://tw-portfolio-rutova.vercel.app/api
+    description: Documentation example (read-only)
 security:
   - ApiKeyAuth: []
   - OAuth2: [events:read, fighters:read]
@@ -317,8 +319,8 @@ paths:
           $ref: '#/components/responses/NotFound'
   /v2/events/{event_id}/bouts:
     get:
-      tags:
-        - Bouts
+      operationId: listEventBouts
+      tags: [Bouts]
       summary: List bouts for an event (v2)
       description: Returns all bouts (fights) on the event card, including basic result and matchup info.
       parameters:
@@ -332,17 +334,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BoutList'
-        '404':
-          $ref: '#/components/responses/NotFound'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'          
 
   /v2/fighters/{fighter_id}:
     get:
-      tags:
-        - Fighters
+      operationId: getFighterWithStats
+      tags: [Fighters] 
       summary: Get fighter with stats (v2)
       description: Returns fighter profile extended with record and basic stats.
       parameters:
@@ -354,15 +356,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FighterWithStats'
-        '404':
-          $ref: '#/components/responses/NotFound'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   /v2/fighters/{fighter_id}/bouts:
     get:
-      tags:
-        - Bouts
+      operationId: listFighterBouts
+      tags: [Bouts]
       summary: List bouts for a fighter (v2)
       description: Returns the fighter’s bouts, including opponent, event and result.
       parameters:
@@ -376,10 +378,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BoutList'
-        '404':
-          $ref: '#/components/responses/NotFound'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
 components:
   securitySchemes:
@@ -672,13 +674,15 @@ components:
           type: string
           example: ftr_2002
         result:
-          type: object
-          nullable: true
+          type: 
+            - object
+            - "null"
           description: Present only after the bout has been completed.
           properties:
             winner_fighter_id:
-              type: string
-              nullable: true
+              type: 
+                - string
+                - "null"
               example: ftr_2001
             method:
               type: string
