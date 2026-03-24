@@ -8,6 +8,16 @@ const config = {
   favicon: 'img/favicon.ico',
   trailingSlash: false,
 
+  onBrokenLinks: 'throw',
+  onBrokenAnchors: 'warn',
+  onDuplicateRoutes: 'throw',
+
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: 'throw',
+    },
+  },
+
   presets: [
     [
       'classic',

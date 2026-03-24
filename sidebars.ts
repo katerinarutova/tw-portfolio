@@ -20,6 +20,7 @@ const sidebars: SidebarsConfig = {
         {type: 'doc', id: 'playbooks/api-docs-criteria'},
         {type: 'doc', id: 'playbooks/release-notes-playbook'},
         {type: 'doc', id: 'playbooks/styles-and-standards'},
+        {type: 'doc', id: 'playbooks/sme-interviewing'},
       ],
     },
     {
