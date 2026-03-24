@@ -1,0 +1,114 @@
+---
+title: "Why API Docs Fail"
+description: "Most API documentation doesn’t fail because of writing. It fails because no one checks if it’s actually usable."
+tags:
+  - api
+  - api-docs
+  - developer-experience
+  - documentation
+  - api-design
+---
+
+# Why API Documentation Fails
+
+I once asked for a sandbox before documenting a small internal API.
+
+The developer’s response:
+> “Why are you doing that?”
+
+Because I had seen the documentation.
+
+---
+
+## The problem is not writing
+
+Most API documentation doesn’t fail because people can’t write.
+
+It fails because:
+- no one verifies the real usage
+- no one tests the flow end-to-end
+- knowledge stays in developers’ heads
+
+The system works.  
+The team understands it.  
+So everyone assumes the documentation is “good enough.”
+
+It usually isn’t.
+
+---
+
+## “We have Swagger” is not enough
+
+Swagger (or OpenAPI) is a tool.
+
+It tells you:
+- what endpoints exist
+- what parameters are expected
+
+It does **not** tell you:
+- how to actually use the API
+- how authentication works in practice
+- what a real request/response looks like
+- what can go wrong
+
+That gap is where most API integrations fail.
+
+---
+
+## What is usually missing
+
+From experience, the same gaps show up again and again:
+
+- **Authentication flow is unclear**  
+  You see headers, but not the real sequence.
+
+- **No usable examples**  
+  Either missing, or too abstract to copy-paste.
+
+- **No working environment**  
+  No sandbox, no QA access, nothing to test against.
+
+- **No narrative**  
+  Just endpoints. No story of how they connect.
+
+---
+
+## What I actually do
+
+I don’t start by writing.
+
+I start by trying to use the API.
+
+- I ask for access (sandbox, QA, anything real)
+- I test the flow myself
+- I identify where things break or don’t make sense
+- I go back with specific questions
+
+Only then do I write documentation.
+
+Because documentation is not a description of the system.  
+It’s a guide for someone who doesn’t know it.
+
+---
+
+## The goal
+
+Good API documentation means:
+
+- fewer questions from developers
+- faster integrations
+- less dependency on internal teams
+
+And most importantly:
+
+> someone new can use your API without a call.
+
+---
+
+## If your API docs feel “fine” but still cause problems
+
+They’re probably not fine.
+
+They’re just untested.
+
+→ See [how I approach SME interviews](/docs/playbooks/sme-interviewing)

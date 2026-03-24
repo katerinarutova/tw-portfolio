@@ -17,10 +17,19 @@ const sidebars: SidebarsConfig = {
       label: 'Playbooks',
       collapsed: true,
       items: [
+        {type: 'doc', id: 'playbooks/overview'},
+        {type: 'doc', id: 'playbooks/sme-interviewing'},
         {type: 'doc', id: 'playbooks/api-docs-criteria'},
         {type: 'doc', id: 'playbooks/release-notes-playbook'},
         {type: 'doc', id: 'playbooks/styles-and-standards'},
-        {type: 'doc', id: 'playbooks/sme-interviewing'},
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Insights',
+      collapsed: true,
+      items: [
+        {type: 'doc', id: 'insights/why-api-docs-fail'},
       ],
     },
     {
